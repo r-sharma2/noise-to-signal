@@ -24,7 +24,7 @@ Earlier checkpoint (15 epochs):
 
 ## How It Works
 
-1. **Forward Diffusion Process** — An image `x_0` is transformed into pure noise using a stochastic process. A linear noise schedule (beta_start=1e-4, beta_end=0.02, T=1000) controls how much Gaussian noise is added at each timestep. The closed-form equation calculates each intermediate state `x_t` directly from the initial `x_0` image.
+1. **Forward Diffusion Process** — An image `x_0` is transformed into pure noise using a stochastic process. A linear noise schedule (`beta_start=1e-4, beta_end=0.02, T=1000`) controls how much Gaussian noise is added at each timestep. The closed-form equation calculates each intermediate state `x_t` directly from the initial `x_0` image.
 
 ![Forward diffusion process](outputs/forward_diffusion.png)
 
