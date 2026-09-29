@@ -48,5 +48,5 @@ if __name__ == "__main__":
     model = UNet().to(device)
     model.load_state_dict(torch.load("checkpoints/epoch_38.pt", map_location=device))
     samples = sample(model, (16, 1, 28, 28), betas, alphas, alpha_bars, device)
-    torch.save(samples, "outputs/samples2.pt")
-    print("Done! Saved --> outputs/samples2.pt")
+    torch.save(samples, "outputs/samples.pt")
+    print("Done! Saved --> outputs/samples.pt")

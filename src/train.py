@@ -61,7 +61,7 @@ def train(epochs=15, batch_size=128, learning_rate=2e-4):
             avg_loss = sum(batch_losses) / len(batch_losses)
             epoch_losses.append(avg_loss)
             print(f"\nepoch {epoch} avg {avg_loss:.4f}")
-            torch.save(model.state_dict(), f"checkpoints/epoch_{epoch-1}.pt")
+            torch.save(model.state_dict(), f"checkpoints/epoch_{epoch}.pt")
 
     with open("checkpoints/loss_history.json", "w") as file:
         json.dump(epoch_losses, file)
