@@ -1,6 +1,6 @@
 # noise-to-signal: PyTorch Implementation of Denoising Diffusion Probabilistic Models (DDPM)
 
-A complete PyTorch implementation of DDPM from scratch. The noise schedule, time-conditioned UNet, training loop, and reverse sampling process are built and trained without using diffusers or pretrained components. Input noise into the model and it outputs a clean digit.
+A complete PyTorch implementation of DDPM from scratch. The noise schedule, time-conditioned UNet, training loop, and reverse sampling process are trained without using diffusers or pretrained components. Input noise into the model and it outputs a clean digit.
 
 ![Python](https://img.shields.io/badge/Python-3.13-blue)
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.4-red)
@@ -15,12 +15,18 @@ A complete PyTorch implementation of DDPM from scratch. The noise schedule, time
 
 The model runs 1000 reverse diffusion steps and produces a generated digit from pure Gaussian noise. Every pixel starts as random noise, and no image is ever shown to the model during generation. 
 
+Training loss dropped from approx 1.39 to 0.023 over 40 epochs:
 ![Generated MNIST digits](outputs/samples_40epoch.png)
-Loss converged from approx 1.39 -> 0.023
+![Training loss curve](outputs/loss_curve.png)
+
+Earlier checkpoint (15 epochs):
+![15-epoch samples](outputs/samples_15epoch.png)
 
 ## How It Works
 
 1. **Forward Diffusion Process** — An image `x_0` is transformed into pure noise using a stochastic process. A linear noise schedule (beta_start=1e-4, beta_end=0.02, T=1000) controls how much Gaussian noise is added at each timestep. The closed-form equation calculates each intermediate state `x_t` directly from the initial `x_0` image.
+
+![Forward diffusion process](outputs/forward_diffusion.png)
 
 2. **Time-Conditioned UNet** — A U-Net with a downsampling path, bottleneck, and upsampling path connected by skip connections. A sinusoidal time embedding (transformer-style positional encoding) passes through a learned projection and is incorporated into each convolutional block, allowing the model to predict time-based noise.
 
@@ -36,6 +42,7 @@ noise-to-signal/
 ├── README.md
 ├── requirements.txt
 ├── .gitignore
+├── visualization.py         # loads checkpoint samples and plots grid
 ├── src/
 │   ├── diffusion.py           # noise schedule, q_sample (forward process)
 │   ├── unet.py                 # time-conditioned UNet
@@ -75,7 +82,7 @@ python -m src.train
 ```
 
 - Per-epoch average loss is logged to `checkpoints/loss_history.json`
-- Trained for 40 epochs on an Apple M2 Air (MPS backend) 
+- Trained for 40 epochs on an Apple M2 Air (MPS backend)
 
 ## Generating Samples
 
@@ -116,12 +123,12 @@ Phase 2:
 - [ ] DDIM sampling for faster generation
 - [ ] Classifier-free guidance for conditional generation
 - [ ] Quantitative evaluation (FID, PSNR/SSIM)
-- [ ] Forward/reverse diffusion process visualization
+- [ ] Reverse diffusion process visualization
 - [ ] Live demo (Gradio/Hugging Face Spaces)
 
 ## Limitations/Upcoming Improvements
 
-- Currently trained on MNIST (28×28 grayscale). CIFAR-10 (roadmap) is a better test of the architecture
+- Currently trained on MNIST (28×28 grayscale). CIFAR-10 (roadmap) is better test of architecture
 - No self-attention layers —  needed for high-res/complex datasets
 - Sampling uses slow 1,000-step DDPM process. DDIM sampling (roadmap) will address this
 - Evaluated visually with no FID/PSNR/SSIM numbers yet
