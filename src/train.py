@@ -57,11 +57,11 @@ def train(epochs=15, batch_size=128, learning_rate=2e-4):
 
             batch_losses.append(loss.item())
             if step % 100 == 0:
-                print(f"epoch {epoch} step {step} loss {loss.item():.4f}")
+                print(f"\nepoch {epoch} step {step} loss {loss.item():.4f}")
             avg_loss = sum(batch_losses) / len(batch_losses)
             epoch_losses.append(avg_loss)
             print(f"\nepoch {epoch} avg {avg_loss:.4f}")
-            torch.save(model.state_dict(), f"checkpoints/epoch_{epoch}.pt")
+            torch.save(model.state_dict(), f"checkpoints/epoch_{epoch-1}.pt")
 
     with open("checkpoints/loss_history.json", "w") as file:
         json.dump(epoch_losses, file)

@@ -8,8 +8,8 @@ Usage:
 """
 
 import torch
-import matplotlib.pyplot as plt
-from torchvision import datasets, transforms
+# import matplotlib.pyplot as plt
+# from torchvision import datasets, transforms
 
 T = 1000
 beta_start = 1e-4
