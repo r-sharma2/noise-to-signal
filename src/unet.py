@@ -1,9 +1,19 @@
+"""
+UNet Denoiser
+
+Time-conditioned UNet that predicts the noise added to an image at a
+given diffusion timestep.
+
+Usage:
+    from src.unet import UNet
+"""
+
 import torch
 import torch.nn as nn
 
 
 def get_sinusoidal_time_embedding(d, t):
-    i = torch.arange(d // 2)
+    i = torch.arange(d // 2, device=t.device)
     denominator = torch.pow(10000, 2 * i / d)
 
     # reshaped

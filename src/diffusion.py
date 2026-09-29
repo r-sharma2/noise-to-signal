@@ -1,3 +1,12 @@
+"""
+Diffusion Process
+
+Implements the DDPM forward process which noises a clean image to any timestep t using the closed form equation
+
+Usage:
+    from src.diffusion import T, beta_start, beta_end, get_schedule, q_sample
+"""
+
 import torch
 import matplotlib.pyplot as plt
 from torchvision import datasets, transforms
@@ -27,36 +36,43 @@ def q_sample(x_0, t, alpha_bars, noise=None):
     return x_t
 
 
-if __name__ == "__main__":
+def get_schedule(T, beta_start, beta_end):
     betas = linear_beta_schedule(T, beta_start, beta_end)
-
-    # check beta, alpha_bars vals
-    print(betas.shape)
-    print(betas[0], betas[-1])
     alphas = 1 - betas
     alpha_bars = torch.cumprod(alphas, dim=0)
-    print(alphas.shape)
-    print(alpha_bars.shape)
-    print(alpha_bars[0], alpha_bars[-1])
+    return betas, alphas, alpha_bars
 
-    # check shape of q_sample
-    x_0 = torch.randn(4, 1, 28, 28)
-    t = torch.randint(0, T, (4,))
-    x_t = q_sample(x_0, t, alpha_bars)
-    print(x_t.shape)
 
-    # check MNIST image
-    dataset = datasets.MNIST(
-        "../data", train=True, transform=transforms.ToTensor(), download=True
-    )
-    img, _ = dataset[0]
-    img = torch.unsqueeze(img, 0)
-    timesteps = [0, 100, 200, 500, 700, 999]
-    fig, axs = plt.subplots(nrows=1, ncols=len(timesteps), figsize=(18, 3))
-    fig.suptitle("MNIST Forward Diffusion")
-    for i, t_value in enumerate(timesteps):
-        t = torch.tensor(t_value)
-        x_t = q_sample(img, t, alpha_bars)  # noisy
-        axs[i].imshow(x_t.squeeze(), cmap="gray")
-        axs[i].set_title(f"t={t_value}")
-    plt.show()
+# if __name__ == "__main__":
+#     betas = linear_beta_schedule(T, beta_start, beta_end)
+
+#     # check beta, alpha_bars vals
+#     print(betas.shape)
+#     print(betas[0], betas[-1])
+#     alphas = 1 - betas
+#     alpha_bars = torch.cumprod(alphas, dim=0)
+#     print(alphas.shape)
+#     print(alpha_bars.shape)
+#     print(alpha_bars[0], alpha_bars[-1])
+
+#     # check shape of q_sample
+#     x_0 = torch.randn(4, 1, 28, 28)
+#     t = torch.randint(0, T, (4,))
+#     x_t = q_sample(x_0, t, alpha_bars)
+#     print(x_t.shape)
+
+#     # check MNIST image
+#     dataset = datasets.MNIST(
+#         "../data", train=True, transform=transforms.ToTensor(), download=True
+#     )
+#     img, _ = dataset[0]
+#     img = torch.unsqueeze(img, 0)
+#     timesteps = [0, 100, 200, 500, 700, 999]
+#     fig, axs = plt.subplots(nrows=1, ncols=len(timesteps), figsize=(18, 3))
+#     fig.suptitle("MNIST Forward Diffusion")
+#     for i, t_value in enumerate(timesteps):
+#         t = torch.tensor(t_value)
+#         x_t = q_sample(img, t, alpha_bars)  # noisy
+#         axs[i].imshow(x_t.squeeze(), cmap="gray")
+#         axs[i].set_title(f"t={t_value}")
+#     plt.show()
